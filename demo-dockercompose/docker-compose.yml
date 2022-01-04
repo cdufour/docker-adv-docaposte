@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  apache:
+    image: httpd:2.4-alpine
+    ports:
+    - 8001:80
+    volumes:
+    - $PWD/htdocs:/usr/local/apache2/htdocs
+    networks:
+      docaposte:
+
+  apache_dev:
+    image: httpd:2.4-alpine
+    ports:
+    - 8002:80
+    volumes:
+    - $PWD/htdocs:/usr/local/apache2/htdocs
+    networks:
+      docaposte:
+
+  mysql:
+    image: mysql:5.7
+    ports:
+    - 3306:3306
+    volumes:
+    - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    networks:
+      docaposte:
+        ipv4_address: 172.60.238.100
+
+volumes:
+ mysql-data:
+
+networks:
+  docaposte:
+    ipam:
+      driver: default
+      config:
+      - subnet: "172.60.238.0/24"

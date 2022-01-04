@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  web:
+    image: opusidea/simpleweb:0.7
+    #build:
+      #context: .
+      #dockerfile: Dockerfile.dev
+    ports:
+    - 3000:3000
+    #volumes:
+    #- $PWD:/app
+    environment:
+      REDIS_HOST: db
+      REDIS_PORT: 6379
+    restart: always
+    deploy:
+      replicas: 3
+      placement:
+        max_replicas_per_node: 2
+        constraints:
+        - "node.role != manager"
+      resources:
+        limits:
+          memory: 64M
+          cpus: '0.50'
+        reservations:
+          memory: 16M
+          cpus: '0.25'
+
+  db:
+    image: redis:5-alpine
